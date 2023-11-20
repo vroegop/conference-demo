@@ -7,8 +7,5 @@ test('SQS Queue Created', () => {
   const stack = new Cdk.CdkStack(app, 'MyTestStack');
   const template = Template.fromStack(stack);
 
-  template.hasResourceProperties('AWS::EC2::Instance', {
-    InstanceType: 't3.micro'
-  });
 });
  

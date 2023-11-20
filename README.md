@@ -7,14 +7,16 @@ Live demo for the conference
 
     env: { region: 'eu-west-1', account: '531843824238' },
 
-## Constructs
+## app
 
 ```ts
+#!/usr/bin/env node
+import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { CloudFrontToApiGatewayToLambda } from '@aws-solutions-constructs/aws-cloudfront-apigateway-lambda';
-import { LambdaToDynamoDB } from '@aws-solutions-constructs/aws-lambda-dynamodb';
-import { Code, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { CdkStack } from '../lib/cdk-stack';
+
+const app = new cdk.App();
+new CdkStack(app, 'quick-demo-stack', {});
 ```
 
 ```ts
@@ -27,32 +29,47 @@ const lambdaToDynamo = new LambdaToDynamoDB(this, 'test-lambda-dynamodb-stack', 
 });
 ```
 
+## lib
 
 ```ts
-new CloudFrontToApiGatewayToLambda(this, 'test-cloudfront-apigateway-lambda', {
-    existingLambdaObj: lambdaToDynamo.lambdaFunction
-});
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { Instance, Vpc, InstanceType, InstanceClass, InstanceSize, AmazonLinuxImage, SubnetType, SecurityGroup, Port, Peer } from 'aws-cdk-lib/aws-ec2'
+
+export class CdkStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    // Define the EC2 instance details
+    new Instance(this, 'Instance', {
+      vpc: new Vpc(this, 'VPC'),
+      instanceType: InstanceType.of(InstanceClass.T3, InstanceSize.MICRO),
+      vpcSubnets: { subnetType: SubnetType.PUBLIC },
+      associatePublicIpAddress: true,
+      machineImage: new AmazonLinuxImage(),
+      ssmSessionPermissions: true
+    });
+  }
+}
+
 ```
 
-## Lambda
+## test
 
 ```ts
-import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
-import {DynamoDBDocumentClient, PutCommand} from '@aws-sdk/lib-dynamodb';
+import * as cdk from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
+import * as Cdk from '../lib/cdk-stack';
 
-const TableName = process.env.DDB_TABLE_NAME;
-const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {marshallOptions: {removeUndefinedValues: true}});
+test('SQS Queue Created', () => {
+  const app = new cdk.App();
+  const stack = new Cdk.CdkStack(app, 'MyTestStack');
+  const template = Template.fromStack(stack);
 
-export const handler = async () => {
-    const Item = {id: new Date().toISOString(), value: 'Hello CDK'};
-
-    await dynamo.send(new PutCommand({TableName, Item}));
-
-    return {
-        statusCode: 200,
-        body: `Success writing to database: ${JSON.stringify(Item)}`,
-    };
-}
+  template.hasResourceProperties('AWS::EC2::Instance', {
+    InstanceType: 't3.micro'
+  });
+});
 ```
 
 > npm run build
