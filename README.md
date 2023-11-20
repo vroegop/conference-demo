@@ -19,16 +19,6 @@ const app = new cdk.App();
 new CdkStack(app, 'quick-demo-stack', {});
 ```
 
-```ts
-const lambdaToDynamo = new LambdaToDynamoDB(this, 'test-lambda-dynamodb-stack', {
-    lambdaFunctionProps: {
-        code: Code.fromAsset(`lambda`),
-        runtime: Runtime.NODEJS_18_X,
-        handler: 'index.handler'
-    },
-});
-```
-
 ## lib
 
 ```ts
