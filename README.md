@@ -1,60 +1,14 @@
-# conference-demo
-Live demo for the conference
+# Welcome to your CDK TypeScript project
 
-> mkdir cdk && cd cdk && cdk init app --language typescript
+This is a blank project for CDK development with TypeScript.
 
-## Deploy parameters
+The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
-    env: { region: 'eu-west-1', account: '531843824238' },
+## Useful commands
 
-## Constructs
-
-```ts
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import { CloudFrontToApiGatewayToLambda } from '@aws-solutions-constructs/aws-cloudfront-apigateway-lambda';
-import { LambdaToDynamoDB } from '@aws-solutions-constructs/aws-lambda-dynamodb';
-import { Code, Runtime } from 'aws-cdk-lib/aws-lambda';
-```
-
-```ts
-const lambdaToDynamo = new LambdaToDynamoDB(this, 'test-lambda-dynamodb-stack', {
-    lambdaFunctionProps: {
-        code: Code.fromAsset(`lambda`),
-        runtime: Runtime.NODEJS_18_X,
-        handler: 'index.handler'
-    },
-});
-```
-
-
-```ts
-new CloudFrontToApiGatewayToLambda(this, 'test-cloudfront-apigateway-lambda', {
-    existingLambdaObj: lambdaToDynamo.lambdaFunction
-});
-```
-
-## Lambda
-
-```ts
-import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
-import {DynamoDBDocumentClient, PutCommand} from '@aws-sdk/lib-dynamodb';
-
-const TableName = process.env.DDB_TABLE_NAME;
-const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {marshallOptions: {removeUndefinedValues: true}});
-
-export const handler = async () => {
-    const Item = {id: new Date().toISOString(), value: 'Hello CDK'};
-
-    await dynamo.send(new PutCommand({TableName, Item}));
-
-    return {
-        statusCode: 200,
-        body: `Success writing to database: ${JSON.stringify(Item)}`,
-    };
-}
-```
-
-> npm run build
-
-> cdk deploy
+* `npm run build`   compile typescript to js
+* `npm run watch`   watch for changes and compile
+* `npm run test`    perform the jest unit tests
+* `cdk deploy`      deploy this stack to your default AWS account/region
+* `cdk diff`        compare deployed stack with current state
+* `cdk synth`       emits the synthesized CloudFormation template

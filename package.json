@@ -20,10 +20,10 @@
     "typescript": "~5.2.2"
   },
   "dependencies": {
-    "@aws-solutions-constructs/aws-cloudfront-apigateway-lambda": "^2.45.0",
-    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.45.0",
-    "aws-cdk-lib": "2.100.0",
-    "constructs": "^10.0.0",
+    "@aws-solutions-constructs/aws-apigateway-lambda": "^2.46.0",
+    "@aws-solutions-constructs/aws-lambda-dynamodb": "^2.46.0",
+    "aws-cdk-lib": "^2.110.1",
+    "constructs": "^10.3.0",
     "source-map-support": "^0.5.21"
   }
 }
