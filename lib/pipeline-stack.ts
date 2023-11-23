@@ -10,7 +10,7 @@ export class ConfCdkPipeline extends cdk.Stack {
     const pipeline = new CodePipeline(this, 'ConfCdkPipeline', {
       pipelineName: 'ConfCdkPipeline',
       synth: new ShellStep('Synth', {
-        input: CodePipelineSource.gitHub('vroegop/conference-demo', 'solution-2'),
+        input: CodePipelineSource.gitHub('vroegop/conference-demo', 'solution'),
         commands: ['npm ci', 'npm run build', 'npx cdk synth']
       })
     });
