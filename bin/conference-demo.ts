@@ -4,6 +4,6 @@ import * as cdk from 'aws-cdk-lib';
 import { ConfCdkPipeline } from '../lib/pipeline-stack';
 
 const app = new cdk.App();
-new ConfCdkPipeline(app, 'PipelineStack', {
+new ConfCdkPipeline(app, 'ConfCdkPipeline', {
   env: { region: 'us-west-1', account: '531843824238' },
 });
