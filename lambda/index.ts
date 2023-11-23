@@ -2,7 +2,10 @@ import {DynamoDBClient} from '@aws-sdk/client-dynamodb';
 import {DynamoDBDocumentClient, PutCommand} from '@aws-sdk/lib-dynamodb';
 
 const TableName = process.env.DDB_TABLE_NAME;
-const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}), {marshallOptions: {removeUndefinedValues: true}});
+const dynamo = DynamoDBDocumentClient.from(
+    new DynamoDBClient({}),
+    {marshallOptions: {removeUndefinedValues: true}}
+);
 
 export const handler = async () => {
     const headers = {
